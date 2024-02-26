@@ -23,7 +23,7 @@
 
     // Plugin Option Page Style
     function clpwp_add_theme_css(){
-        wp_enqueue_style('clpwp_admin_style', plugins_url("/css/clpwp-admin-style.css", __FILE__), false, '1.0.0');
+        wp_enqueue_style('clpwp-admin-style', plugins_url('css/clpwp-admin-style.css', __FILE__), false, "1.0.0");
     }
     add_action('admin_enqueue_scripts', 'clpwp_add_theme_css');
 
@@ -35,31 +35,41 @@
         <div class="clpwp_main_area">
             <div class="clowo_body_area clpwp_common">
                 <h3 id="title"><?php print esc_attr('Login Page Customizar');?></h3>
-                <form action="options.php" metheod="post">
+                <form action="options.php" method="post">
                     <?php wp_nonce_field('update-options');?>
                     <!-- Primary Color -->
                     <label for="clpwp-primary-color" name="clpwp-primary-color">
                         <?php print esc_attr('Primary Color');?>
                     </label>
                     <input type="color" name="clpwp-primary-color" value="<?php print get_option('clpwp-primary-color');?>">
+
+                    <!-- Secondary Color -->
+                    <label for="clpwp-sec-color" name="clpwp-sec-color">
+                        <?php print esc_attr('Secondary Color');?>
+                    </label>
+                    <input type="color" name="clpwp-sec-color" value="<?php print get_option('clpwp-sec-color');?>">
+
                     <!-- Main Logo -->
                     <label for="clpwp-logo-image-url" name="clpwp-logo-image-url">
                         <?php print esc_attr('Upload your logo');?>
                     </label>
                     <input type="text" name="clpwp-logo-image-url" value="<?php print get_option('clpwp-logo-image-url');?>" placeholder="Past your Logo URL here">
+
                     <!-- Background Image -->
                     <label for="clpwp-custom-bg-image" name="clpwp-custom-bg-image">
                         <?php print esc_attr('Upload your background image');?>
                     </label>
                     <input type="text" name="clpwp-custom-bg-image" value="<?php print get_option('clpwp-custom-bg-image');?>" placeholder="Past your Background Image URL here">
+
                     <!-- Background Brightness -->
                     <label for="clpwp-custom-bg-brightness" name="clpwp-custom-bg-brightness">
                         <?php print esc_attr('Background Brightness');?>
                     </label>
-                    <input type="number" name="clpwp-custom-bg-brightness" value="<?php print get_option('clpwp-custom-bg-brightness');?>" placeholder="Background Brightness">
+                    <input type="text" name="clpwp-custom-bg-brightness" value="<?php print get_option('clpwp-custom-bg-brightness');?>" placeholder="Between 0.1 to 0.9">
 
                     <input type="hidden" name="action" value="update">
-                    <input type="hidden" name="page_options" value="clpwp-primary-color, clpwp-logo-image-url, clpwp-custom-bg-image">
+                    <input type="hidden" name="page_options" value="clpwp-primary-color,
+                    clpwp-sec-color, clpwp-logo-image-url, clpwp-custom-bg-image, clpwp-custom-bg-brightness">
                     <input type="submit" name="submit" value="<?php _e('Save Changes', 'clpwp');?>" class="button button-primary">
                 </form>
             </div>
@@ -73,7 +83,7 @@
     
     // Loading css file
     function clpwp_login_enqueue_register(){
-        wp_enqueue_style('clpwp_login_enqueue', plugins_url("/css/clpwp-styles.css", __FILE__), false, '1.0.0');
+        wp_enqueue_style('clpwp_login_enqueue', plugins_url("css/clpwp-styles.css", __FILE__), false, '1.0.0');
     }
     add_action('login_enqueue_scripts', 'clpwp_login_enqueue_register');
 
@@ -82,7 +92,28 @@
         ?>
         <style>
             #login h1 a, .login h1 a {
-                background-image: url(<?php print plugin_dir_url(__FILE__). '/img/logo-sm.png';?>);
+                background-image: url(<?php print get_option('clpwp-logo-image-url'); ?>) !important;
+            }
+            body.login #loginform p.submit input {
+	            background-color: <?php print get_option('clpwp-primary-color'); ?> !important;
+            }
+            .login .message,
+            .login .notice,
+            .login .success{
+                border-left: 4px solid <?php print get_option('clpwp-primary-color'); ?> !important;
+            }
+            input#user_login,
+            input#user_pass {
+                border-left: 4px solid <?php print get_option('clpwp-primary-color'); ?> !important;
+            }
+            body.login #backtoblog a {
+	            background-color: <?php print get_option('clpwp-sec-color'); ?> !important;
+            }
+            body.login {
+                background-image: url(<?php print get_option('clpwp-custom-bg-image'); ?>) !important;
+            }
+            body.login::after {
+	            opacity: <?php print get_option('clpwp-custom-bg-brightness'); ?> !important;
             }
         </style>
         <?php
