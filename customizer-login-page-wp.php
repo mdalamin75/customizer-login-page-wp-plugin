@@ -41,31 +41,36 @@
                     <label for="clpwp-primary-color" name="clpwp-primary-color">
                         <?php print esc_attr('Primary Color');?>
                     </label>
+                    <small>Add your Primary Color</small>
                     <input type="color" name="clpwp-primary-color" value="<?php print get_option('clpwp-primary-color');?>">
 
                     <!-- Secondary Color -->
                     <label for="clpwp-sec-color" name="clpwp-sec-color">
                         <?php print esc_attr('Secondary Color');?>
                     </label>
+                    <small>Add your Secondary Color</small>
                     <input type="color" name="clpwp-sec-color" value="<?php print get_option('clpwp-sec-color');?>">
 
                     <!-- Main Logo -->
                     <label for="clpwp-logo-image-url" name="clpwp-logo-image-url">
                         <?php print esc_attr('Upload your logo');?>
                     </label>
+                    <small>Paste your logo URL here, 80x80 Recpmanded</small>
                     <input type="text" name="clpwp-logo-image-url" value="<?php print get_option('clpwp-logo-image-url');?>" placeholder="Past your Logo URL here">
 
                     <!-- Background Image -->
                     <label for="clpwp-custom-bg-image" name="clpwp-custom-bg-image">
                         <?php print esc_attr('Upload your background image');?>
                     </label>
+                    <small>Paste your Background Image URL here</small>
                     <input type="text" name="clpwp-custom-bg-image" value="<?php print get_option('clpwp-custom-bg-image');?>" placeholder="Past your Background Image URL here">
 
                     <!-- Background Brightness -->
                     <label for="clpwp-custom-bg-brightness" name="clpwp-custom-bg-brightness">
                         <?php print esc_attr('Background Brightness');?>
                     </label>
-                    <input type="text" name="clpwp-custom-bg-brightness" value="<?php print get_option('clpwp-custom-bg-brightness');?>" placeholder="Between 0.1 to 0.9">
+                    <small>Set your Background Brightness here. Number Only (Between 0.1 to 0.9)</small>
+                    <input type="text" name="clpwp-custom-bg-brightness" value="<?php print get_option('clpwp-custom-bg-brightness');?>" placeholder="Background Brightness">
 
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="page_options" value="clpwp-primary-color,
@@ -75,7 +80,13 @@
             </div>
             <div class="clpwp_sidebar_area clpwp_common">
                 <h3 id="title"><?php print esc_attr('About Author');?></h3>
+                <p><a href="https://mdalamin.vercel.app/" target="_blank">
+                    <img src="<?php print plugin_dir_url(__FILE__).'/img/mdalamin.webp'?>" alt="mdalamin" class="author_img">
+                </a></p>
                 <p>I'm <strong><a href="https://mdalamin.vercel.app/" target="_blank">MD.AL-AMIN</a></strong> a Front End Web developer who is passionate about making error-free websites with 100% client satisfaction. I have a passion for learning and sharing my knowledge with others as publicly as possible. I love to solve real-world problems.</p>
+                <p><a href="https://www.buymeacoffee.com/mdalamin75" target="_blank">
+                    <img src="<?php print plugin_dir_url(__FILE__).'/img/buyme.png'?>" alt="buymeacoffe">
+                </a></p>
             </div>
         </div>
         <?php
@@ -126,4 +137,22 @@
     }
     add_filter('login_headerurl', 'clpwp_login_logo_url_change');
 
+
+    /*
+    * Plugin Redirect Feature
+    */ 
+    register_activation_hook( __FILE__, 'clpwp_plugin_activation' );
+    function clpwp_plugin_activation(){
+        add_option('clpwp_plugin_do_activation_redirect', true);
+    }
+    add_action('admin_init', 'clpwp_plugin_redirect');
+    function clpwp_plugin_redirect(){
+        if(get_option( 'clpwp_plugin_do_activation_redirect', false )){
+            delete_option('clpwp_plugin_do_activation_redirect');
+            if (!isset($_GET['actice-multi'])) {
+                wp_safe_redirect(admin_url('admin.php?page=clpwp-plugin-option'));
+                exit;
+            }
+        }
+    }
  ?>
